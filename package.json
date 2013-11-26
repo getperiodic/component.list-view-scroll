@@ -1,0 +1,43 @@
+{
+  "name": "component.list-view-scroll",
+  "description": "An on scroll effect template that animates the sides of sections once they are in the viewport",
+  "version": "0.0.1",
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.x"
+  },
+  "scripts": {
+    "test": "mocha -R spec --recursive",
+    "install": "grunt copy",
+    "uninstall": "grunt clean",
+    "watch": "grunt watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:getperiodic/component.list-view-scroll.git"
+  },
+  "dependencies": {
+    "classie": "0.0.1",
+    "browsernizr": "~1.0.1",
+    "grunt-contrib-copy": "0.4.1",
+    "grunt-contrib-clean": "~0.5.0"
+  },
+  "devDependencies": {
+    "chai": "1.5.0",
+    "grunt": "0.4.1",
+    "grunt-contrib-jshint": "0.4.3",
+    "grunt-contrib-copy": "0.4.1",
+    "grunt-simple-mocha": "0.4.0",
+    "grunt-jsbeautifier": "0.1.7",
+    "mocha": "1.9.0",
+    "grunt-contrib-less":"0.8.2",
+    "grunt-contrib-clean":"0.5.0",
+    "grunt-contrib-watch":"0.5.3"
+  },
+  "keywords": [
+    "Amex Pub",
+    "amexpub",
+    "package",
+    "library"
+  ]
+}
