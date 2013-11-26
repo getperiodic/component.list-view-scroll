@@ -1,0 +1,14 @@
+<div id="<%= ui_list_view_on_scroll.dom_id %>" class="<%= ui_list_view_on_scroll.dom_class %>">
+	<% for(x in ui_list_view_on_scroll.listItems){
+		%>
+		<section class="<%= ui_list_view_on_scroll.dom_section %>">
+			<article class="<%= ui_list_view_on_scroll.dom_class_side %> <%= ui_list_view_on_scroll.dom_class_side_left %>">
+				<%- ui_list_view_on_scroll.listItems[x].left %>
+			</article>
+			<figure class="<%= ui_list_view_on_scroll.dom_class_side %> <%= ui_list_view_on_scroll.dom_class_side_right %>">
+				<%- ui_list_view_on_scroll.listItems[x].right %>
+			</figure>
+		</section>
+		<%
+	}%>
+</div>
