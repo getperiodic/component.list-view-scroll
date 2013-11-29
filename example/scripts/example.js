@@ -955,7 +955,7 @@ var process=require("__browserify_process");/*global setImmediate: false, setTim
 
 }());
 
-},{"__browserify_process":28}],2:[function(require,module,exports){
+},{"__browserify_process":29}],2:[function(require,module,exports){
 
 /*!
  * EJS
@@ -1314,7 +1314,7 @@ if (require.extensions) {
   });
 }
 
-},{"./filters":3,"./utils":4,"fs":25,"path":26}],3:[function(require,module,exports){
+},{"./filters":3,"./utils":4,"fs":26,"path":27}],3:[function(require,module,exports){
 /*!
  * EJS - Filters
  * Copyright(c) 2010 TJ Holowaychuk <tj@vision-media.ca>
@@ -2709,22 +2709,27 @@ window.onload = function(){
 	    }
 	},
 	function(err, results) {
-		console.log(results)
-	    // results is now equals to: {one: 1, two: 2}
+		if(err){
+			console.log(err);
+		}
+		webapp.render( results.template, results.componentData, "scrollerhtml");
 	});
 }
 
-webapp.on("loadedTemplate",function(){
-	console.log("Render")
-	webapp.render();
-})
-
-webapp.on("loadedJSONData",function(){
+webapp.on("grabbedData",function(){
 	console.log("loaded data")
-})
+});
+
 webapp.on("grabbedTemplate",function(){
 	console.log("loaded template")
-})
+});
+
+webapp.on("renderedTemplate",function(){
+	var listviewcroll1 =  listViewScroll( {el:document.getElementById( 'cbp-so-scroller' )} );
+	listviewcroll1.init();
+
+	console.log("rendered template");
+});
 },{"../../../index":10,"./webapp":9,"async":1}],9:[function(require,module,exports){
 'use strict';
 
@@ -2738,6 +2743,7 @@ var listViewScroll = require('../../../index'),
 var webapp = function(){
 	var componentData=false,
 		componentTemplate=false,
+		componentHTML = false,
 		componentJSON = 'https://s3.amazonaws.com/gpsampledata/component.list-view-scroll/contentspec.json',
 		self = this;
 
@@ -2764,17 +2770,25 @@ var webapp = function(){
 		this.emit("grabbedTemplate");
 	}
 
-	this.render = function(){
-		console.log("ejs render")
+	this.render = function(template,data,element){
+		componentHTML = ejs.render(template,data);
+		document.getElementById(element).innerHTML = componentHTML;
+
+		// console.log("template",template);
+		// console.log("data",data);
+		this.emit("renderedTemplate");
 	}
 
+	this.getComponentHTML= function(){
+		return componentHTML;
+	}
 
 }
 
 util.inherits(webapp,events.EventEmitter);
 module.exports = new webapp();
 
-},{"../../../index":10,"ejs":2,"events":24,"superagent":5,"util":27}],10:[function(require,module,exports){
+},{"../../../index":10,"ejs":2,"events":25,"superagent":5,"util":28}],10:[function(require,module,exports){
 /*
  * component.list-view-scroll
  * http://github.amexpub.com/modules/component.list-view-scroll
@@ -2807,7 +2821,8 @@ module.exports = require('./lib/component.list-view-scroll');
 'use strict';
 
 var Modernizr = require('browsernizr'),
-	classie = require('classie');
+	classie = require('classie'),
+	extend = require('util-extend');
 
 var docElem = window.document.documentElement;
 
@@ -2858,14 +2873,6 @@ function inViewport( el, h ) {
 	return (elTop + elH * h) <= viewed && (elBottom) >= scrolled;
 }
 
-function extend( a, b ) {
-	for( var key in b ) {
-		if( b.hasOwnProperty( key ) ) {
-			a[key] = b[key];
-		}
-	}
-	return a;
-}
 
 function listViewOnScroll(options){
 	var el = options.el,
@@ -2875,10 +2882,11 @@ function listViewOnScroll(options){
 			// If we were to use the value of 1, the animation would only be triggered when we see all of the item in the viewport (100% of it)
 			viewportFactor : 0.2
 		},
-		sections = Array.prototype.slice.call( el.querySelectorAll( '.cbp-so-section' ) ),
+		sections = Array.prototype.slice.call( el.querySelectorAll( '.p_c_lvs-section' ) ),
 		didScroll = false;
 
 	options = extend( options, defaults );
+	console.log("in list view scroll afer extend",options);
 
 	function _init() {
 		if( Modernizr.touch ) {return;}
@@ -2935,7 +2943,7 @@ function listViewOnScroll(options){
 }
 
 module.exports = listViewOnScroll;
-},{"browsernizr":12,"classie":21}],12:[function(require,module,exports){
+},{"browsernizr":12,"classie":21,"util-extend":23}],12:[function(require,module,exports){
 var Modernizr = require('./lib/Modernizr'),
     ModernizrProto = require('./lib/ModernizrProto'),
     classes = require('./lib/classes'),
@@ -3238,6 +3246,41 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 })( window );
 
 },{}],23:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+module.exports = extend;
+function extend(origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || typeof add !== 'object') return origin;
+
+  var keys = Object.keys(add);
+  var i = keys.length;
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+  return origin;
+}
+
+},{}],24:[function(require,module,exports){
 
 
 //
@@ -3455,7 +3498,7 @@ if (typeof Object.getOwnPropertyDescriptor === 'function') {
   exports.getOwnPropertyDescriptor = valueObject;
 }
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3736,13 +3779,13 @@ EventEmitter.listenerCount = function(emitter, type) {
     ret = emitter._events[type].length;
   return ret;
 };
-},{"util":27}],25:[function(require,module,exports){
+},{"util":28}],26:[function(require,module,exports){
 
 // not implemented
 // The reason for having an empty file and not throwing is to allow
 // untraditional implementation of this module.
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 var process=require("__browserify_process");// Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3953,7 +3996,7 @@ exports.extname = function(path) {
   return splitPath(path)[3];
 };
 
-},{"__browserify_process":28,"_shims":23,"util":27}],27:[function(require,module,exports){
+},{"__browserify_process":29,"_shims":24,"util":28}],28:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4498,7 +4541,7 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-},{"_shims":23}],28:[function(require,module,exports){
+},{"_shims":24}],29:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};

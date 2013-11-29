@@ -14,19 +14,24 @@ window.onload = function(){
 	    }
 	},
 	function(err, results) {
-		console.log(results)
-	    // results is now equals to: {one: 1, two: 2}
+		if(err){
+			console.log(err);
+		}
+		webapp.render( results.template, results.componentData, "scrollerhtml");
 	});
 }
 
-webapp.on("loadedTemplate",function(){
-	console.log("Render")
-	webapp.render();
-})
-
-webapp.on("loadedJSONData",function(){
+webapp.on("grabbedData",function(){
 	console.log("loaded data")
-})
+});
+
 webapp.on("grabbedTemplate",function(){
 	console.log("loaded template")
-})
+});
+
+webapp.on("renderedTemplate",function(){
+	var listviewcroll1 =  listViewScroll( {el:document.getElementById( 'cbp-so-scroller' )} );
+	listviewcroll1.init();
+
+	console.log("rendered template");
+});

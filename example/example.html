@@ -16,16 +16,30 @@
 
 
 		<script id="component-template" type="javscript/template">
-			<div id="<%= ui_list_view_on_scroll.dom_id %>" class="<%= ui_list_view_on_scroll.dom_class %>">
-				<% for(x in ui_list_view_on_scroll.listItems){
+			<div id="<%= config.html.dom_id %>" class="<%= config.html.dom_id %>">
+				<% for(x in content){
+					var media_container="",
+						content_container="", 
+						left_content="",
+						right_content=""; 
+
+					content_container='<article class="'+config.html.dom_class_side +' ' + config.html.dom_class_side_left+'">'+content[x].content+'</article>';
+
+					media_container='<figure class="'+config.html.dom_class_side  +' ' + config.html.dom_class_side_right +'">'+content[x].media+'</figure>';
+
+					if (x%2==0){
+						right_content=media_container;
+						left_content=content_container;
+					}
+					else{
+						left_content=media_container;
+						right_content=content_container;
+					}
+
 					%>
-					<section class="<%= ui_list_view_on_scroll.dom_section %>">
-						<article class="<%= ui_list_view_on_scroll.dom_class_side %> <%= ui_list_view_on_scroll.dom_class_side_left %>">
-							<%- ui_list_view_on_scroll.listItems[x].left %>
-						</article>
-						<figure class="<%= ui_list_view_on_scroll.dom_class_side %> <%= ui_list_view_on_scroll.dom_class_side_right %>">
-							<%- ui_list_view_on_scroll.listItems[x].right %>
-						</figure>
+					<section class="p_c_lvs-section <%= config.html.dom_id %>">
+						<%- left_content %>
+						<%- right_content %>
 					</section>
 					<%
 				}%>

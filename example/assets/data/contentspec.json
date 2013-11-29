@@ -3,7 +3,7 @@
 		"html":{
 			"dom_id":"cbp-so-scroller",
 			"dom_class":"cbp-so-scroller",
-			"dom_section":"cbp-so-section",
+			"dom_section":"p_c_lvs-section",
 			"dom_class_side":"cbp-so-side",
 			"dom_class_side_left":"cbp-so-side-left",
 			"dom_class_side_right":"cbp-so-side-right"
