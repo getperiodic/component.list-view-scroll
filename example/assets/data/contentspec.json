@@ -1,23 +1,23 @@
 {
 	"config":{
 		"html":{
-			"dom_id":"cbp-so-scroller",
-			"dom_class":"cbp-so-scroller",
-			"dom_section":"p_c_lvs-section",
-			"dom_class_side":"cbp-so-side",
-			"dom_class_side_left":"cbp-so-side-left",
-			"dom_class_side_right":"cbp-so-side-right"
+			"dom_title":"Best Slideshow Ever",
+			"dom_id":"p_c_lvs-id",
+			"dom_class":"p_c_lvs-id",
+			"dom_class_side":"p_c_lvs-side",
+			"dom_class_side_left":"p_c_lvs-side-left",
+			"dom_class_side_right":"p_c_lvs-side-right"
 		}
 	},
 	"content":[
 		{
-			"title": "<h2>Lemon drops</h2>",
-			"dek": "html of dek",
-			"content": "<p>Fruitcake toffee jujubes. Topping biscuit sesame snaps jelly caramels jujubes tiramisu fruitcake. Marzipan tart lemon drops chocolate sesame snaps jelly beans.</p>",
-			"media": "<img src='https://raw.github.com/getperiodic/component.list-view-scroll/master/example/assets/images/1.png'>",
-			"date": "html of publish date",
-			"author": "html of author",
-			"byline": "byline"
+			"title": "<h2>Travel & Leisure Transporter</h2>",
+			"dek": "Upgrade your next warm-weather escape with a stay at one of these top-ranked beach hotels, according to T+L readers.",
+			"content": "How to explain the difference a beachfront hotel makes? “More than unobstructed views, it’s about the freedom of not having to look both ways to cross the street before feeling sand between your toes,” says Matt Thomson, founder of <a title='Wavecation.com' href='http://www.wavecation.com' target='_blank'>Wavecation.com</a>, a surfing-focused vacation rental company.",
+			"media": "<img src='https://raw.github.com/getperiodic/component.list-view-scroll/master/example/assets/images/slides/la-casa-que-canta.jpg'>",
+			"date": "March 6, 2013",
+			"author": "Ann Sheilds",
+			"byline": "The best beaches in the world"
 		},{
 			"title": "<h2>Lemon drops</h2>",
 			"dek": "html of dek",

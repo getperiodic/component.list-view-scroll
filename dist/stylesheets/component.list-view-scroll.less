@@ -1,37 +1,37 @@
-.cbp-so-scroller {
+.p_c_lvs-id {
 	margin-top: 3em;
 	overflow: hidden;
 }
 
 .p_c_lvs-section {
 	margin-bottom: 15em;
-}
 
-/* Clear floats of children */
-.p_c_lvs-section:before,
-.p_c_lvs-section:after {
-	content: " ";
-	display: table;
-}
+	/* Clear floats of children */
+	&:before,
+	&:after {
+		content: " ";
+		display: table;
+	}
 
-.p_c_lvs-section:after {
-	clear: both;
-}
+	&:after {
+		clear: both;
+	}
 
-/* Text styling */
-.p_c_lvs-section h2 {
-	font-size: 5em;
-	font-weight: 300;
-	line-height: 1;
-}
+	/* Text styling */
+	h2 {
+		font-size: 5em;
+		font-weight: 300;
+		line-height: 1;
+	}
 
-.p_c_lvs-section p {
-	font-size: 2em;
-	font-weight: 300;
+	p {
+		font-size: 2em;
+		font-weight: 300;
+	}
 }
 
 /* Sides */
-.cbp-so-side {
+.p_c_lvs-side {
 	width: 50%;
 	float: left;
 	margin: 0;
@@ -41,56 +41,60 @@
 	-webkit-transition: -webkit-transform 0.5s, opacity 0.5s;
 	-moz-transition: -moz-transform 0.5s, opacity 0.5s;
 	transition: transform 0.5s, opacity 0.5s;
+
+	/* Clear floats of children */
+	&:before,
+	&:after {
+		content: " ";
+		display: table;
+	}
+
+	&:after {
+		clear: both;
+	}
 }
 
-/* Clear floats of children */
-.cbp-so-side:before,
-.cbp-so-side:after {
-	content: " ";
-	display: table;
-}
 
-.cbp-so-side:after {
-	clear: both;
-}
-
-.cbp-so-side-right {
+.p_c_lvs-side-right {
 	text-align: left;
+	
+	img {
+		float: left;
+	}
 }
 
-.cbp-so-side-left {
+.p_c_lvs-side-left {
 	text-align: right;
+
+	img {
+		float: right;
+	}
 }
 
-.cbp-so-side-right img {
-	float: left;
+.p_c_lvs-init {
+	/* Initial state (hidden or anything else) */
+	.p_c_lvs-side {
+		opacity: 0;
+	}
+
+	.p_c_lvs-side-left {
+		-webkit-transform: translateX(-80px);
+		-moz-transform: translateX(-80px);
+		transform: translateX(-80px);
+	}
+
+	.p_c_lvs-side-right {
+		-webkit-transform: translateX(80px);
+		-moz-transform: translateX(80px);
+		transform: translateX(80px);
+	}
 }
 
-.cbp-so-side-left img {
-	float: right;
-}
-
-/* Initial state (hidden or anything else) */
-.cbp-so-init .cbp-so-side {
-	opacity: 0;
-}
-
-.cbp-so-init .cbp-so-side-left {
-	-webkit-transform: translateX(-80px);
-	-moz-transform: translateX(-80px);
-	transform: translateX(-80px);
-}
-
-.cbp-so-init .cbp-so-side-right {
-	-webkit-transform: translateX(80px);
-	-moz-transform: translateX(80px);
-	transform: translateX(80px);
-}
 
 /* Animated state */
 /* add you final states (transition) or your effects (animations) for each side */
-.p_c_lvs-section.cbp-so-animate .cbp-so-side-left,
-.p_c_lvs-section.cbp-so-animate .cbp-so-side-right {
+.p_c_lvs-section.p_c_lvs-animate .p_c_lvs-side-left,
+.p_c_lvs-section.p_c_lvs-animate .p_c_lvs-side-right {
 	-webkit-transform: translateX(0px);
 	-moz-transform: translateX(0px);
 	transform: translateX(0px);
@@ -98,7 +102,7 @@
 }
 
 /* For example, add a delay for the right side:
-.p_c_lvs-section.cbp-so-animate .cbp-so-side-right {
+.p_c_lvs-section.p_c_lvs-animate .p_c_lvs-side-right {
 	-webkit-transition-delay: 0.2s;
 	-moz-transition-delay: 0.2s;
 	transition-delay: 0.2s;
@@ -108,7 +112,7 @@
 /* Example media queries */
 
 @media screen and (max-width: 73.5em) {
-	.cbp-so-scroller {
+	.p_c_lvs-id {
 		font-size: 65%;
 	}
 
@@ -116,18 +120,18 @@
 		margin: 0;
 	}
 
-	.cbp-so-side img {
+	.p_c_lvs-side img {
 		max-width: 120%;
 	}
 }
 
 @media screen and (max-width: 41.125em) {
-	.cbp-so-side {
+	.p_c_lvs-side {
 		float: none;
 		width: 100%;
 	}
 
-	.cbp-so-side img {
+	.p_c_lvs-side img {
 		max-width: 100%;
 	}
 }

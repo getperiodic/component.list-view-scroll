@@ -7,18 +7,18 @@ var listViewScroll = require('../../../index'),
 	util = require('util');
 
 
-var webapp = function(){
+var webapp = function(options){
 	var componentData=false,
 		componentTemplate=false,
 		componentHTML = false,
-		componentJSON = 'https://s3.amazonaws.com/gpsampledata/component.list-view-scroll/contentspec.json',
+		componentJSON = '',
 		self = this;
 
 
 	events.EventEmitter.call(this);
 
-	this.grabData = function(callback){
-		request.get(componentJSON)
+	this.grabData = function(url,callback){
+		request.get(url)
 			.end(function(err, res){
 		  	if(err) {
 		  		callback(err,null);
@@ -48,6 +48,10 @@ var webapp = function(){
 
 	this.getComponentHTML= function(){
 		return componentHTML;
+	}
+
+	this.getComponentSpec= function(){
+		return componentData;
 	}
 
 }

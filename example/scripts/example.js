@@ -2699,33 +2699,36 @@ var listViewScroll = require('../../../index'),
 	async = require('async'),
 	webapp = require('./webapp');
 
+var module1 = webapp;
+var module2 = webapp;
+
 window.onload = function(){
 	async.parallel({
 	    template: function(callback){
-	    	webapp.grabTemplate(window.document.getElementById('component-template').innerHTML,callback);
+	    	module1.grabTemplate(window.document.getElementById('component-template').innerHTML,callback);
 	    },
 	    componentData: function(callback){
-            webapp.grabData(callback)
+            module1.grabData('https://s3.amazonaws.com/gpsampledata/component.list-view-scroll/contentspec.json',callback)
 	    }
 	},
 	function(err, results) {
 		if(err){
 			console.log(err);
 		}
-		webapp.render( results.template, results.componentData, "scrollerhtml");
+		module1.render( results.template, results.componentData, "scrollerhtml");
 	});
 }
 
-webapp.on("grabbedData",function(){
+module1.on("grabbedData",function(){
 	console.log("loaded data")
 });
 
-webapp.on("grabbedTemplate",function(){
+module1.on("grabbedTemplate",function(){
 	console.log("loaded template")
 });
 
-webapp.on("renderedTemplate",function(){
-	var listviewcroll1 =  listViewScroll( {el:document.getElementById( 'cbp-so-scroller' )} );
+module1.on("renderedTemplate",function(){
+	var listviewcroll1 =  listViewScroll( {idSelector:module1.getComponentSpec().config.html.dom_id} );
 	listviewcroll1.init();
 
 	console.log("rendered template");
@@ -2740,18 +2743,18 @@ var listViewScroll = require('../../../index'),
 	util = require('util');
 
 
-var webapp = function(){
+var webapp = function(options){
 	var componentData=false,
 		componentTemplate=false,
 		componentHTML = false,
-		componentJSON = 'https://s3.amazonaws.com/gpsampledata/component.list-view-scroll/contentspec.json',
+		componentJSON = '',
 		self = this;
 
 
 	events.EventEmitter.call(this);
 
-	this.grabData = function(callback){
-		request.get(componentJSON)
+	this.grabData = function(url,callback){
+		request.get(url)
 			.end(function(err, res){
 		  	if(err) {
 		  		callback(err,null);
@@ -2783,6 +2786,10 @@ var webapp = function(){
 		return componentHTML;
 	}
 
+	this.getComponentSpec= function(){
+		return componentData;
+	}
+
 }
 
 util.inherits(webapp,events.EventEmitter);
@@ -2801,7 +2808,7 @@ module.exports = require('./lib/component.list-view-scroll');
 },{"./lib/component.list-view-scroll":11}],11:[function(require,module,exports){
 
 /*
- * Alist-view-on-scroll
+ * list-view-scroll
  * http://github.amexpub.com/modules
  *
  * Copyright (c) 2013 Amex Pub. All rights reserved.
@@ -2875,18 +2882,20 @@ function inViewport( el, h ) {
 
 
 function listViewOnScroll(options){
-	var el = options.el,
-		defaults = {
+	var defaults = {
 			// The viewportFactor defines how much of the appearing item has to be visible in order to trigger the animation
 			// if we'd use a value of 0, this would mean that it would add the animation class as soon as the item is in the viewport. 
 			// If we were to use the value of 1, the animation would only be triggered when we see all of the item in the viewport (100% of it)
-			viewportFactor : 0.2
-		},
-		sections = Array.prototype.slice.call( el.querySelectorAll( '.p_c_lvs-section' ) ),
-		didScroll = false;
+			viewportFactor : 0.2,
+			idSelector: 'p_c_lvs-id',
+			sectionClass: '.p_c_lvs-section'
+		};
+	options = extend( options, defaults);
 
-	options = extend( options, defaults );
-	console.log("in list view scroll afer extend",options);
+	var didScroll = false,
+		el = document.getElementById( options.idSelector ),
+		sections = Array.prototype.slice.call( el.querySelectorAll( options.sectionClass ) );
+
 
 	function _init() {
 		if( Modernizr.touch ) {return;}
@@ -2895,7 +2904,7 @@ function listViewOnScroll(options){
 		// the sections already shown...
 		sections.forEach( function( el, i ) {
 			if( !inViewport( el ) ) {
-				classie.add( el, 'cbp-so-init' );
+				classie.add( el, 'p_c_lvs-init' );
 			}
 		} );
 
@@ -2925,12 +2934,12 @@ function listViewOnScroll(options){
 
 		sections.forEach( function( el, i ) {
 			if( inViewport( el, options.viewportFactor ) ) {
-				classie.add( el, 'cbp-so-animate' );
+				classie.add( el, 'p_c_lvs-animate' );
 			}
 			else {
 				// this add class init if it doesn't have it. This will ensure that the items initially in the viewport will also animate on scroll
-				classie.add( el, 'cbp-so-init' );
-				classie.remove( el, 'cbp-so-animate' );
+				classie.add( el, 'p_c_lvs-init' );
+				classie.remove( el, 'p_c_lvs-animate' );
 			}
 		});
 		didScroll = false;
