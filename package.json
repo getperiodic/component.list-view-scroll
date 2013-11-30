@@ -1,7 +1,7 @@
 {
   "name": "periodic.component.list-view-scroll",
   "description": "An on scroll effect template that animates the sides of sections once they are in the viewport",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "index.js",
   "engines": {
     "node": ">=0.10.x"
