@@ -2697,7 +2697,8 @@ module.exports = function(arr, fn, initial){
 
 var listViewScroll = require('../../../index'),
 	async = require('async'),
-	webapp = require('./webapp');
+	webapp = require('./webapp'),
+	listviewcroll1;
 
 var module1 = webapp;
 var module2 = webapp;
@@ -2728,11 +2729,12 @@ module1.on("grabbedTemplate",function(){
 });
 
 module1.on("renderedTemplate",function(){
-	var listviewcroll1 =  listViewScroll( {idSelector:module1.getComponentSpec().config.html.dom_id} );
+	listviewcroll1 =listViewScroll( {idSelector:module1.getComponentSpec().config.html.dom_id} );
 	listviewcroll1.init();
 
 	console.log("rendered template");
 });
+
 },{"../../../index":10,"./webapp":9,"async":1}],9:[function(require,module,exports){
 'use strict';
 

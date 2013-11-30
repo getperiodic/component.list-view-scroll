@@ -1,13 +1,39 @@
-<div id="<%= ui_list_view_on_scroll.dom_id %>" class="<%= ui_list_view_on_scroll.dom_class %>">
-	<% for(x in ui_list_view_on_scroll.listItems){
+<div id="<%= config.html.dom_id %>" class="<%= config.html.dom_id %>">
+	<header><%= config.html.dom_title %></header>
+	<% for(x in content){
+		var media_container="",
+			content_container="", 
+			left_content="",
+			right_content=""
+			main_content_side=(x%2==0) ? "left":"right",
+			main_media_side=(x%2==0) ? "right":"left"; ; 
+
+		content_container='<article class="p_c_lvs-side p_c_lvs-side-'+main_content_side+'">'
+			+'<h2>'+content[x].title+'</h2>'
+			+'<p class="small">'+content[x].dek+'<p>'
+			+'<div class="article-meta">'
+				+'<time>'+content[x].date+'</time>'
+				+'<small>'+content[x].author+'</small>'
+				+'<small>'+content[x].byline+'</small>'
+			+'</div>'
+			+'<p>'+content[x].content+'</p>'
+			+'</article>';
+
+		media_container='<figure class="p_c_lvs-side p_c_lvs-side-'+main_media_side+'">'+content[x].media+'</figure>';
+
+		if (main_content_side=="left"){
+			right_content=media_container;
+			left_content=content_container;
+		}
+		else{
+			left_content=media_container;
+			right_content=content_container;
+		}
+
 		%>
-		<section class="<%= ui_list_view_on_scroll.dom_section %>">
-			<article class="<%= ui_list_view_on_scroll.dom_class_side %> <%= ui_list_view_on_scroll.dom_class_side_left %>">
-				<%- ui_list_view_on_scroll.listItems[x].left %>
-			</article>
-			<figure class="<%= ui_list_view_on_scroll.dom_class_side %> <%= ui_list_view_on_scroll.dom_class_side_right %>">
-				<%- ui_list_view_on_scroll.listItems[x].right %>
-			</figure>
+		<section class="p_c_lvs-section <%= config.html.dom_id %>">
+			<%- left_content %>
+			<%- right_content %>
 		</section>
 		<%
 	}%>

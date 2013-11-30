@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="stylesheets/example.css">
 		<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../dist/stylesheets/component.list-view-scroll.css">
+		<link rel="stylesheet" type="text/css" href="stylesheets/example.css">
 		<script type="text/javascript" src="scripts/example.js"></script>
 	</head>
 	<body>
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
-					<div id="scrollerhtml"> scrollable html</div>
+					<div id="scrollerhtml"></div>
 				</div>
 			</div>
 		</div>
@@ -17,17 +18,29 @@
 
 		<script id="component-template" type="javscript/template">
 			<div id="<%= config.html.dom_id %>" class="<%= config.html.dom_id %>">
+				<header><%= config.html.dom_title %></header>
 				<% for(x in content){
 					var media_container="",
 						content_container="", 
 						left_content="",
-						right_content=""; 
+						right_content=""
+						main_content_side=(x%2==0) ? "left":"right",
+						main_media_side=(x%2==0) ? "right":"left"; ; 
 
-					content_container='<article class="p_c_lvs-side p_c_lvs-side-left">'+content[x].content+'</article>';
+					content_container='<article class="p_c_lvs-side p_c_lvs-side-'+main_content_side+'">'
+						+'<h2>'+content[x].title+'</h2>'
+						+'<p class="small">'+content[x].dek+'<p>'
+						+'<div class="article-meta">'
+							+'<time>'+content[x].date+'</time>'
+							+'<small>'+content[x].author+'</small>'
+							+'<small>'+content[x].byline+'</small>'
+						+'</div>'
+						+'<p>'+content[x].content+'</p>'
+						+'</article>';
 
-					media_container='<figure class="p_c_lvs-side p_c_lvs-side-right">'+content[x].media+'</figure>';
+					media_container='<figure class="p_c_lvs-side p_c_lvs-side-'+main_media_side+'">'+content[x].media+'</figure>';
 
-					if (x%2==0){
+					if (main_content_side=="left"){
 						right_content=media_container;
 						left_content=content_container;
 					}
