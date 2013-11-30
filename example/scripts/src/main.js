@@ -2,11 +2,11 @@
 
 var listViewScroll = require('../../../index'),
 	async = require('async'),
-	webapp = require('./webapp'),
-	listviewcroll1;
+	webapp = require('./webapp');
 
-var module1 = webapp;
-var module2 = webapp;
+var module1 = webapp,
+	listviewcroll1 = new listViewScroll(),
+	listviewcroll2 = new listViewScroll();
 
 window.onload = function(){
 	async.parallel({
@@ -21,7 +21,12 @@ window.onload = function(){
 		if(err){
 			console.log(err);
 		}
-		module1.render( results.template, results.componentData, "scrollerhtml");
+		
+		listviewcroll1.render( results.template, results.componentData, "scrollerhtml");
+
+		var data2 = results.componentData;
+		data2.config.html.dom_id="anotherScroller";
+		listviewcroll2.render( results.template, data2, "anotherscrollerhtml");
 	});
 }
 
@@ -33,9 +38,12 @@ module1.on("grabbedTemplate",function(){
 	console.log("loaded template")
 });
 
-module1.on("renderedTemplate",function(){
-	listviewcroll1 =listViewScroll( {idSelector:module1.getComponentSpec().config.html.dom_id} );
+listviewcroll1.on("renderedComponent",function(){
 	listviewcroll1.init();
-
 	console.log("rendered template");
+});
+
+listviewcroll2.on("renderedComponent",function(){
+	listviewcroll2.init({idSelector: 'anotherScroller'});
+	console.log("@(*#)@(# rendered template");
 });

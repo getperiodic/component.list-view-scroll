@@ -1,7 +1,6 @@
 'use strict';
 
 var listViewScroll = require('../../../index'),
-	ejs = require('ejs'),
 	request = require('superagent'),
 	events = require('events'),
 	util = require('util');
@@ -35,19 +34,6 @@ var webapp = function(options){
 		componentTemplate = templateString;
 		callback(null,componentTemplate);
 		this.emit("grabbedTemplate");
-	}
-
-	this.render = function(template,data,element){
-		componentHTML = ejs.render(template,data);
-		document.getElementById(element).innerHTML = componentHTML;
-
-		// console.log("template",template);
-		// console.log("data",data);
-		this.emit("renderedTemplate");
-	}
-
-	this.getComponentHTML= function(){
-		return componentHTML;
 	}
 
 	this.getComponentSpec= function(){
