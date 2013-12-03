@@ -2132,7 +2132,7 @@ window.onload = function(){
 		listviewcroll1.render( results.template, results.componentData, "scrollerhtml");
 
 		var data2 = results.componentData;
-		data2.config.html.dom_id="anotherScroller";
+		data2.contentspec.config.html.dom_id="anotherScroller";
 		listviewcroll2.render( results.template, data2, "anotherscrollerhtml");
 	});
 }

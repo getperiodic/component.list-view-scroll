@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
+	 	<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<title>Periodic: Web Component - list view scroll</title>
+		<meta name="description" content="An on scroll effect template that animates the sides of sections once they are in the viewport" />
+		<meta name="keywords" content="Periodic Decoupled Framework, ui, ux, dom" />
+		<meta name="author" content="Periodic" />
 		<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="../dist/stylesheets/component.list-view-scroll.css">
 		<link rel="stylesheet" type="text/css" href="stylesheets/example.css">
@@ -19,6 +26,10 @@
 		</div>
 
 		<script id="component-template" type="javscript/template">
+			<% 
+				config = contentspec.config;
+				content = contentspec.content;
+			%>
 			<div id="<%= config.html.dom_id %>" class="<%= config.html.dom_id %> p_c_lvs-id">
 				<header><%= config.html.dom_title %></header>
 				<% for(x in content){
