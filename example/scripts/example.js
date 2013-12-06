@@ -955,7 +955,7 @@ var process=require("__browserify_process");/*global setImmediate: false, setTim
 
 }());
 
-},{"__browserify_process":35}],2:[function(require,module,exports){
+},{"__browserify_process":20}],2:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -2202,7 +2202,7 @@ var webapp = function(options){
 util.inherits(webapp,events.EventEmitter);
 module.exports = new webapp();
 
-},{"../../../index":7,"events":31,"superagent":2,"util":34}],7:[function(require,module,exports){
+},{"../../../index":7,"events":16,"superagent":2,"util":19}],7:[function(require,module,exports){
 /*
  * component.list-view-scroll
  * http://github.amexpub.com/modules/component.list-view-scroll
@@ -2233,10 +2233,7 @@ module.exports = require('./lib/component.list-view-scroll');
  */
 
 'use strict';
-require('browsernizr/test/touchevents');
-
-var Modernizr = require('browsernizr'),
-	classie = require('classie'),
+var classie = require('classie'),
 	extend = require('util-extend'),
 	ejs = require('ejs'),
 	events = require('events'),
@@ -2268,13 +2265,10 @@ var listViewOnScroll = function(config){
 		el = document.getElementById( options.idSelector ),
 		sections = el.getElementsByClassName( options.sectionClass );
 
-		if( Modernizr.touch ) {return;}
-		//initially hide sections
-		// for(var x in sections){
-		// 	if( !_inViewport( sections[x], options.viewportFactor  ) && (typeof sections[x] === "object") ) {
-		// 		// classie.add( sections[x], 'p_c_lvs-init' );
-		// 	}
-		// }
+		if(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+			// console.log("has touch");
+			return;
+		}
 
 		function scrollHandler() {
 			if( !didScroll ) {
@@ -2298,7 +2292,6 @@ var listViewOnScroll = function(config){
 
 		window.addEventListener( 'scroll', scrollHandler.bind(this), false );
 		window.addEventListener( 'resize', resizeHandler.bind(this), false );
-
 	};
 
 	function _getViewportH() {
@@ -2377,382 +2370,7 @@ listViewOnScroll.prototype.render = function(template,data,element){
 };
 
 module.exports = listViewOnScroll;
-},{"browsernizr":9,"browsernizr/test/touchevents":23,"classie":24,"ejs":26,"events":31,"util":34,"util-extend":29}],9:[function(require,module,exports){
-var Modernizr = require('./lib/Modernizr'),
-    ModernizrProto = require('./lib/ModernizrProto'),
-    classes = require('./lib/classes'),
-    testRunner = require('./lib/testRunner'),
-    setClasses = require('./lib/setClasses');
-
-// Run each test
-testRunner();
-
-// Remove the "no-js" class if it exists
-setClasses(classes);
-
-delete ModernizrProto.addTest;
-delete ModernizrProto.addAsyncTest;
-
-// Run the things that are supposed to run after the tests
-for (var i = 0; i < Modernizr._q.length; i++) {
-  Modernizr._q[i]();
-}
-
-module.exports = Modernizr;
-
-},{"./lib/Modernizr":10,"./lib/ModernizrProto":11,"./lib/classes":12,"./lib/setClasses":19,"./lib/testRunner":20}],10:[function(require,module,exports){
-var ModernizrProto = require('./ModernizrProto');
-
-
-  // Fake some of Object.create
-  // so we can force non test results
-  // to be non "own" properties.
-  var Modernizr = function(){};
-  Modernizr.prototype = ModernizrProto;
-
-  // Leak modernizr globally when you `require` it
-  // rather than force it here.
-  // Overwrite name so constructor name is nicer :D
-  Modernizr = new Modernizr();
-
-  
-
-module.exports = Modernizr;
-},{"./ModernizrProto":11}],11:[function(require,module,exports){
-var tests = require('./tests');
-
-
-  var ModernizrProto = {
-    // The current version, dummy
-    _version: 'v3.0.0pre',
-
-    // Any settings that don't work as separate modules
-    // can go in here as configuration.
-    _config: {
-      classPrefix : '',
-      enableClasses : true
-    },
-
-    // Queue of tests
-    _q: [],
-
-    // Stub these for people who are listening
-    on: function( test, cb ) {
-      // I don't really think people should do this, but we can
-      // safe guard it a bit.
-      // -- NOTE:: this gets WAY overridden in src/addTest for
-      // actual async tests. This is in case people listen to
-      // synchronous tests. I would leave it out, but the code
-      // to *disallow* sync tests in the real version of this
-      // function is actually larger than this.
-      setTimeout(function() {
-        cb(this[test]);
-      }, 0);
-    },
-
-    addTest: function( name, fn, options ) {
-      tests.push({name : name, fn : fn, options : options });
-    },
-
-    addAsyncTest: function (fn) {
-      tests.push({name : null, fn : fn});
-    }
-  };
-
-  
-
-module.exports = ModernizrProto;
-},{"./tests":22}],12:[function(require,module,exports){
-
-  var classes = [];
-  
-module.exports = classes;
-},{}],13:[function(require,module,exports){
-
-  var createElement = function() {
-    return document.createElement.apply(document, arguments);
-  };
-  
-module.exports = createElement;
-},{}],14:[function(require,module,exports){
-
-  var docElement = document.documentElement;
-  
-module.exports = docElement;
-},{}],15:[function(require,module,exports){
-var createElement = require('./createElement');
-
-
-  function getBody() {
-    // After page load injecting a fake body doesn't work so check if body exists
-    var body = document.body;
-
-    if(!body) {
-      // Can't use the real body create a fake one.
-      body = createElement('body');
-      body.fake = true;
-    }
-
-    return body;
-  }
-
-  
-
-module.exports = getBody;
-},{"./createElement":13}],16:[function(require,module,exports){
-var ModernizrProto = require('./ModernizrProto');
-var docElement = require('./docElement');
-var createElement = require('./createElement');
-var getBody = require('./getBody');
-
-
-  // Inject element with style element and some CSS rules
-  function injectElementWithStyles( rule, callback, nodes, testnames ) {
-    var mod = 'modernizr';
-    var style;
-    var ret;
-    var node;
-    var docOverflow;
-    var div = createElement('div');
-    var body = getBody();
-
-    if ( parseInt(nodes, 10) ) {
-      // In order not to give false positives we create a node for each test
-      // This also allows the method to scale for unspecified uses
-      while ( nodes-- ) {
-        node = createElement('div');
-        node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
-        div.appendChild(node);
-      }
-    }
-
-    // <style> elements in IE6-9 are considered 'NoScope' elements and therefore will be removed
-    // when injected with innerHTML. To get around this you need to prepend the 'NoScope' element
-    // with a 'scoped' element, in our case the soft-hyphen entity as it won't mess with our measurements.
-    // msdn.microsoft.com/en-us/library/ms533897%28VS.85%29.aspx
-    // Documents served as xml will throw if using &shy; so use xml friendly encoded version. See issue #277
-    style = ['&#173;','<style id="s', mod, '">', rule, '</style>'].join('');
-    div.id = mod;
-    // IE6 will false positive on some tests due to the style element inside the test div somehow interfering offsetHeight, so insert it into body or fakebody.
-    // Opera will act all quirky when injecting elements in documentElement when page is served as xml, needs fakebody too. #270
-    (!body.fake ? div : body).innerHTML += style;
-    body.appendChild(div);
-    if ( body.fake ) {
-      //avoid crashing IE8, if background image is used
-      body.style.background = '';
-      //Safari 5.13/5.1.4 OSX stops loading if ::-webkit-scrollbar is used and scrollbars are visible
-      body.style.overflow = 'hidden';
-      docOverflow = docElement.style.overflow;
-      docElement.style.overflow = 'hidden';
-      docElement.appendChild(body);
-    }
-
-    ret = callback(div, rule);
-    // If this is done after page load we don't want to remove the body so check if body exists
-    if ( body.fake ) {
-      body.parentNode.removeChild(body);
-      docElement.style.overflow = docOverflow;
-      // Trigger layout so kinetic scrolling isn't disabled in iOS6+
-      docElement.offsetHeight;
-    } else {
-      div.parentNode.removeChild(div);
-    }
-
-    return !!ret;
-
-  }
-
-  
-
-module.exports = injectElementWithStyles;
-},{"./ModernizrProto":11,"./createElement":13,"./docElement":14,"./getBody":15}],17:[function(require,module,exports){
-
-  /**
-   * is returns a boolean for if typeof obj is exactly type.
-   */
-  function is( obj, type ) {
-    return typeof obj === type;
-  }
-  
-module.exports = is;
-},{}],18:[function(require,module,exports){
-var ModernizrProto = require('./ModernizrProto');
-
-
-  // List of property values to set for css tests. See ticket #21
-  var prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
-
-  // expose these for the plugin API. Look in the source for how to join() them against your input
-  ModernizrProto._prefixes = prefixes;
-
-  
-
-module.exports = prefixes;
-},{"./ModernizrProto":11}],19:[function(require,module,exports){
-var Modernizr = require('./Modernizr');
-var docElement = require('./docElement');
-
-
-  // Pass in an and array of class names, e.g.:
-  //  ['no-webp', 'borderradius', ...]
-  function setClasses( classes ) {
-    var className = docElement.className;
-    var removeClasses = [];
-    var regex;
-    var classPrefix = Modernizr._config.classPrefix || '';
-
-    // Change `no-js` to `js` (we do this regardles of the `enableClasses`
-    // option)
-    // Handle classPrefix on this too
-    var reJS = new RegExp('(^|\\s)'+classPrefix+'no-js(\\s|$)');
-    className = className.replace(reJS, '$1'+classPrefix+'js$2');
-
-    if(Modernizr._config.enableClasses) {
-      // Need to remove any existing `no-*` classes for features we've detected
-      for(var i = 0; i < classes.length; i++) {
-        if(!classes[i].match('^no-')) {
-          removeClasses.push('no-' + classes[i]);
-        }
-      }
-
-      // Use a regex to remove the old...
-      regex = new RegExp('(^|\\s)' + removeClasses.join('|') + '(\\s|$)', 'g');
-      className = className.replace(regex, '$1$2');
-
-      // Then add the new...
-      className += ' ' + classPrefix + classes.join(' ' + classPrefix);
-
-      // Apply
-      docElement.className = className;
-    }
-
-  }
-
-  
-
-module.exports = setClasses;
-},{"./Modernizr":10,"./docElement":14}],20:[function(require,module,exports){
-var tests = require('./tests');
-var Modernizr = require('./Modernizr');
-var classes = require('./classes');
-var is = require('./is');
-
-
-  // Run through all tests and detect their support in the current UA.
-  function testRunner() {
-    var featureNames;
-    var feature;
-    var aliasIdx;
-    var result;
-    var nameIdx;
-    for ( var featureIdx in tests ) {
-      featureNames = [];
-      feature = tests[featureIdx];
-      // run the test, throw the return value into the Modernizr,
-      //   then based on that boolean, define an appropriate className
-      //   and push it into an array of classes we'll join later.
-      //
-      //   If there is no name, it's an 'async' test that is run,
-      //   but not directly added to the object. That should
-      //   be done with a post-run addTest call.
-      if ( feature.name ) {
-        featureNames.push(feature.name.toLowerCase());
-
-        if (feature.options && feature.options.aliases && feature.options.aliases.length) {
-          // Add all the aliases into the names list
-          for (aliasIdx = 0; aliasIdx < feature.options.aliases.length; aliasIdx++) {
-            featureNames.push(feature.options.aliases[aliasIdx].toLowerCase());
-          }
-        }
-      }
-
-      // Run the test, or use the raw value if it's not a function
-      result = is(feature.fn, 'function') ? feature.fn() : feature.fn;
-
-      // Set each of the names on the Modernizr object
-      for (nameIdx = 0; nameIdx < featureNames.length; nameIdx++) {
-        Modernizr[featureNames[nameIdx]] = result;
-        classes.push((Modernizr[featureNames[nameIdx]] ? '' : 'no-') + featureNames[nameIdx]);
-      }
-    }
-  }
-
-  
-
-module.exports = testRunner;
-},{"./Modernizr":10,"./classes":12,"./is":17,"./tests":22}],21:[function(require,module,exports){
-var ModernizrProto = require('./ModernizrProto');
-var injectElementWithStyles = require('./injectElementWithStyles');
-
-
-  var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
-  
-
-module.exports = testStyles;
-},{"./ModernizrProto":11,"./injectElementWithStyles":16}],22:[function(require,module,exports){
-
-  var tests = [];
-  
-module.exports = tests;
-},{}],23:[function(require,module,exports){
-var Modernizr = require('./../lib/Modernizr');
-var prefixes = require('./../lib/prefixes');
-var testStyles = require('./../lib/testStyles');
-
-/*!
-{
-  "name": "Touch Events",
-  "property": "touchevents",
-  "caniuse" : "touch",
-  "tags": ["media", "attribute"],
-  "notes": [{
-    "name": "Touch Events spec",
-    "href": "http://www.w3.org/TR/2013/WD-touch-events-20130124/"
-  }],
-  "warnings": [
-    "Indicates if the browser supports the Touch Events spec, and does not necessarily reflect a touchscreen device"
-  ],
-  "knownBugs": [
-    "False-positive on some configurations of Nokia N900",
-    "False-positive on some BlackBerry 6.0 builds – https://github.com/Modernizr/Modernizr/issues/372#issuecomment-3112695"
-  ]
-}
-!*/
-/* DOC
-
-Indicates if the browser supports the W3C Touch Events API.
-
-This *does not* necessarily reflect a touchscreen device:
-
-* Older touchscreen devices only emulate mouse events
-* Modern IE touch devices implement the Pointer Events API instead: use `Modernizr.pointerevents` to detect support for that
-* Some browsers & OS setups may enable touch APIs when no touchscreen is connected
-* Future browsers may implement other event models for touch interactions
-
-See this article: [You Can't Detect A Touchscreen](http://www.stucox.com/blog/you-cant-detect-a-touchscreen/).
-
-It's recommended to bind both mouse and touch/pointer events simultaneously – see [this HTML5 Rocks tutorial](http://www.html5rocks.com/en/mobile/touchandmouse/).
-
-This test will also return `true` for Firefox 4 Multitouch support.
-
-*/
-
-  // Chrome (desktop) used to lie about its support on this, but that has since been rectified: http://crbug.com/36415
-  Modernizr.addTest('touchevents', function() {
-    var bool;
-    if(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
-      bool = true;
-    } else {
-      var query = ['@media (',prefixes.join('touch-enabled),('),'heartz',')','{#modernizr{top:9px;position:absolute}}'].join('');
-      testStyles(query, function( node ) {
-        bool = node.offsetTop === 9;
-      });
-    }
-    return bool;
-  });
-
-
-},{"./../lib/Modernizr":10,"./../lib/prefixes":18,"./../lib/testStyles":21}],24:[function(require,module,exports){
+},{"classie":9,"ejs":11,"events":16,"util":19,"util-extend":14}],9:[function(require,module,exports){
 /*
  * classie
  * http://github.amexpub.com/modules/classie
@@ -2762,7 +2380,7 @@ This test will also return `true` for Firefox 4 Multitouch support.
 
 module.exports = require('./lib/classie');
 
-},{"./lib/classie":25}],25:[function(require,module,exports){
+},{"./lib/classie":10}],10:[function(require,module,exports){
 /*!
  * classie - class helper functions
  * from bonzo https://github.com/ded/bonzo
@@ -2852,7 +2470,7 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 
 })( window );
 
-},{}],26:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 
 /*!
  * EJS
@@ -3211,7 +2829,7 @@ if (require.extensions) {
   });
 }
 
-},{"./filters":27,"./utils":28,"fs":32,"path":33}],27:[function(require,module,exports){
+},{"./filters":12,"./utils":13,"fs":17,"path":18}],12:[function(require,module,exports){
 /*!
  * EJS - Filters
  * Copyright(c) 2010 TJ Holowaychuk <tj@vision-media.ca>
@@ -3414,7 +3032,7 @@ exports.json = function(obj){
   return JSON.stringify(obj);
 };
 
-},{}],28:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 
 /*!
  * EJS
@@ -3440,7 +3058,7 @@ exports.escape = function(html){
 };
  
 
-},{}],29:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3475,7 +3093,7 @@ function extend(origin, add) {
   return origin;
 }
 
-},{}],30:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 
 
 //
@@ -3693,7 +3311,7 @@ if (typeof Object.getOwnPropertyDescriptor === 'function') {
   exports.getOwnPropertyDescriptor = valueObject;
 }
 
-},{}],31:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3974,13 +3592,13 @@ EventEmitter.listenerCount = function(emitter, type) {
     ret = emitter._events[type].length;
   return ret;
 };
-},{"util":34}],32:[function(require,module,exports){
+},{"util":19}],17:[function(require,module,exports){
 
 // not implemented
 // The reason for having an empty file and not throwing is to allow
 // untraditional implementation of this module.
 
-},{}],33:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var process=require("__browserify_process");// Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4191,7 +3809,7 @@ exports.extname = function(path) {
   return splitPath(path)[3];
 };
 
-},{"__browserify_process":35,"_shims":30,"util":34}],34:[function(require,module,exports){
+},{"__browserify_process":20,"_shims":15,"util":19}],19:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4736,7 +4354,7 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-},{"_shims":30}],35:[function(require,module,exports){
+},{"_shims":15}],20:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
