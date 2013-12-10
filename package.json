@@ -42,5 +42,14 @@
     "ui",
     "ux",
     "dom"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/getperiodic/component.list-view-scroll/issues"
+  },
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "author": "Yaw Joseph Etse",
+  "license": "BSD-2-Clause"
 }

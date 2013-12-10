@@ -38,7 +38,8 @@
 						left_content="",
 						right_content=""
 						main_content_side=(x%2==0) ? "left":"right",
-						main_media_side=(x%2==0) ? "right":"left"; ; 
+						main_media_side=(x%2==0) ? "right":"left"; 
+						text_content = (content[x].excerpt) ? content[x].excerpt : content[x].content; 
 
 					content_container='<article class="p_c_lvs-side p_c_lvs-side-'+main_content_side+'">'
 						+'<h2>'+content[x].title+'</h2>'
@@ -48,7 +49,7 @@
 							+'<small>'+content[x].author+'</small>'
 							+'<small>'+content[x].byline+'</small>'
 						+'</div>'
-						+'<p>'+content[x].content+'</p>'
+						+'<p>'+text_content+'</p>'
 						+'</article>';
 
 					media_container='<figure class="p_c_lvs-side p_c_lvs-side-'+main_media_side+'">'+content[x].media+'</figure>';
